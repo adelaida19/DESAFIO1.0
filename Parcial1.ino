@@ -10,7 +10,7 @@ void agregar(int *arreglo, int num, int nDatos);
 void imprimir(int *arreglo, int n);
 void copiar(int *origen, int *destino, int nDatos);
 int offset(int *arreglo, int nDatos);
-void amplitud(int *arreglo, int nDatos);
+int amplitud(int *arreglo, int nDatos);
 void frecuencia(float T);
 void forma(int *arreglo, int nDatos);
 
@@ -18,6 +18,7 @@ int num=0; //guarda el valor del generador de señales
 int nDatos=0; //cantidad de datos en el heap
 int *ptrAd= nullptr; //puntero que almacena los nDatos
 int *aux = nullptr; //puntero que ayuda a cambiar el tamaño de datos
+int off = 0;
 
 bool adquirir = false; 
 bool procesar = false;
@@ -33,7 +34,7 @@ void setup() {
   Serial.begin(9600);// se declara el pin 2 como salida
   
   lcd_1.begin(16, 2);
-  lcd_1.print("Parcial 1 Info2");
+  lcd_1.print("Desafio 1 Info2");
 } 
 
 void loop() {
@@ -42,7 +43,7 @@ void loop() {
   }else if(digitalRead(bprocesar)==LOW){
   	adquirir = false;
     imprimir(ptrAd,nDatos);
-    amplitud(ptrAd,nDatos);
+    off = amplitud(ptrAd,nDatos);
     
     float t22=t2;
     float t11=t1;
@@ -66,20 +67,20 @@ void loop() {
       num=analogRead(analogPin);//
       agregar(ptrAd,num, nDatos-1);
       
-      if(num>0){//
+      if((num + off)>0){//
         signo = true;
       }else{
       	signo = false;
       }
     }else{
       
-      if(num<0 && t<4){
+      if((num + off)<0 && t<4){
         if(signo==true){
           t+=1;
           signo=false;
         }
       }
-      if(num>0 && t<4){
+      if((num + off)>0 && t<4){
       	if(signo==false){
           t+=1;
           signo=true;
@@ -145,6 +146,12 @@ int offset(int *arreglo, int nDatos){
     if (*(arreglo+i)<menor){
     	menor=*(arreglo+i);
     }
+    if(menor==0){
+      menor=mayor;
+    }
+    if(mayor==0){
+    	mayor=menor;
+    }
   }
   
   Serial.println("mayor:");
@@ -165,7 +172,7 @@ int offset(int *arreglo, int nDatos){
   
 }
 
-void amplitud(int *arreglo, int nDatos){
+int amplitud(int *arreglo, int nDatos){
 	float amplitud=0;				
   	for (int i = 0; i < nDatos; ++i) {
       if(*(arreglo+i) < 0){ //pregunto si es negativo
@@ -197,6 +204,14 @@ void amplitud(int *arreglo, int nDatos){
   	lcd_1.print(amplitud/100);
   	lcd_1.print(" V");
     delay(500);
+  	
+  if(ff<0){
+  	ff=-1*ff;
+  }
+  if(ff>0){
+  	ff=-1*ff;
+  }
+  return ff;
 }
 void frecuencia(float T){//
 	lcd_1.clear();
@@ -232,10 +247,10 @@ void forma(int *arreglo, int nDatos){
       if(rango < 0){
       	rango=rango * (-1);//si el rango es negativo se hace positivo
       }
-      if(rango <60 && rango!=0){//clasificación de la señal
+      if(rango <45 && rango!=0){//clasificación de la señal
       	t+=1;
       }
-      if(rango>70){
+      if(rango>65){
       	s+=1;
       }
       if(rango==0){
@@ -291,4 +306,5 @@ void forma(int *arreglo, int nDatos){
     lcd_1.print("Desconocida");
   	delay(500);
   }
+   //adquirir = true;
 }
