@@ -98,12 +98,12 @@ void loop() {
       }
       
       aux=new int[nDatos];
-      copiar(ptrAd,aux,nDatos); //guardamos la información actual para soicitar mas espacio de memoria
+      copiar(ptrAd,aux,nDatos); //guarda la información actual para soicitar mas espacio de memoria
 
-      delete[] ptrAd; //borramos la memoria reservada actualmente 
-      ptrAd=nullptr; //hacemos que no sea un puntero peligroso
+      delete[] ptrAd; //borra la memoria reservada actualmente 
+      ptrAd=nullptr; //hace que no sea un puntero peligroso
 
-      nDatos++; //incrementamos la cantidad de datos para solicitar nueva memoria
+      nDatos++; //incrementa la cantidad de datos para solicitar nueva memoria
       ptrAd=new int[nDatos];
       copiar(aux,ptrAd,nDatos-1);
       num=analogRead(analogPin);//
@@ -117,7 +117,7 @@ void loop() {
 
 
 void agregar(int *arreglo, int num, int nDatos){
-    *(arreglo+nDatos)=num;
+    *(arreglo+nDatos)=num;//agrega los datos nuevos
 }
 
 void imprimir(int *arreglo, int nDatos){
@@ -147,7 +147,7 @@ int offset(int *arreglo, int nDatos){
     	menor=*(arreglo+i);
     }
     if(menor==0){
-      menor=mayor;
+      menor=mayor;//para que el offset de cero
     }
     if(mayor==0){
     	mayor=menor;
@@ -234,7 +234,7 @@ void forma(int *arreglo, int nDatos){
   for(int i=nDatos; i>=0 ; i--){
     if((i-1)>=0){
       v1=*(arreglo+(i-1));
-      if(v1 < 0){// si v1 y v2 son negativos los hacemos positivos
+      if(v1 < 0){// si v1 y v2 son negativos los hace positivos
       	v1= v1 * (-1);
       }
       v2=*(arreglo+i);
@@ -247,10 +247,10 @@ void forma(int *arreglo, int nDatos){
       if(rango < 0){
       	rango=rango * (-1);//si el rango es negativo se hace positivo
       }
-      if(rango <45 && rango!=0){//clasificación de la señal
+      if(rango <100 && rango!=0){//clasificación de la señal
       	t+=1;
       }
-      if(rango>65){
+      if(rango>105){
       	s+=1;
       }
       if(rango==0){
@@ -306,5 +306,5 @@ void forma(int *arreglo, int nDatos){
     lcd_1.print("Desconocida");
   	delay(500);
   }
-   //adquirir = true;
+   adquirir = true;
 }
